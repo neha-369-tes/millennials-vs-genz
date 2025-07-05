@@ -3,480 +3,611 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Millennials vs Gen Z</title>
+    <title>Millennials vs Gen Z - Interactive Presentation</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <style>
-        body { font-family: 'Arial', sans-serif; overflow-x: hidden; }
-        section { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; padding: 2rem; }
-        .title { font-size: 2.5rem; font-weight: bold; color: #1f2937; margin-bottom: 1rem; }
-        .name { font-size: 1.25rem; color: #4b5563; margin-bottom: 2rem; }
-        .split { display: flex; justify-content: center; gap: 2rem; width: 100%; max-width: 1200px; margin-bottom: 2rem; }
-        .column { flex: 1; text-align: center; }
-        .column h3 { font-size: 1.5rem; font-weight: bold; color: #374151; margin-bottom: 1rem; }
-        .column ul { list-style: disc; text-align: left; margin-left: 2rem; color: #4b5563; }
-        .column img { width: 100%; max-width: 500px; border-radius: 10px; margin: 1rem auto; }
-        footer { font-size: 1rem; color: #4b5563; margin-top: 1rem; }
-        .animated-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
-        .nav-buttons { position: fixed; bottom: 20px; width: 100%; text-align: center; }
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .slide {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .animated-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.1;
+            z-index: -1;
+        }
+        
+        .floating-shapes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        
+        .shape {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .shape:nth-child(1) { width: 80px; height: 80px; top: 10%; left: 10%; animation-delay: -0.5s; }
+        .shape:nth-child(2) { width: 120px; height: 120px; top: 20%; right: 10%; animation-delay: -2s; }
+        .shape:nth-child(3) { width: 100px; height: 100px; bottom: 20%; left: 20%; animation-delay: -3.5s; }
+        .shape:nth-child(4) { width: 60px; height: 60px; bottom: 30%; right: 20%; animation-delay: -1s; }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            animation: slideInDown 1s ease-out;
+        }
+        
+        .presenter {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 2rem;
+            animation: fadeIn 1s ease-out 0.5s both;
+        }
+        
+        .content-wrapper {
+            display: flex;
+            gap: 3rem;
+            width: 100%;
+            max-width: 1400px;
+            margin-bottom: 2rem;
+        }
+        
+        .generation-card {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            animation: slideInUp 1s ease-out 0.8s both;
+        }
+        
+        .generation-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
+        }
+        
+        .gen-title {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            position: relative;
+        }
+        
+        .gen-title::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+        
+        .meme-container {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .meme-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #4a5568;
+            margin-bottom: 1rem;
+        }
+        
+        .meme-image {
+            width: 100%;
+            max-width: 350px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .meme-image:hover {
+            transform: scale(1.05);
+        }
+        
+        .traits-list {
+            list-style: none;
+            margin-bottom: 1.5rem;
+        }
+        
+        .traits-list li {
+            padding: 0.75rem 0;
+            color: #2d3748;
+            font-size: 0.95rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            position: relative;
+            padding-left: 2rem;
+        }
+        
+        .traits-list li::before {
+            content: '✨';
+            position: absolute;
+            left: 0;
+            top: 0.75rem;
+            font-size: 1rem;
+        }
+        
+        .lifestyle-image {
+            width: 100%;
+            max-width: 350px;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .slide-counter {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            color: #2d3748;
+            backdrop-filter: blur(10px);
+        }
+        
+        .navigation {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 1rem;
+            z-index: 100;
+        }
+        
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            color: #2d3748;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-btn:hover {
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+        
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.5s ease;
+            z-index: 100;
+        }
+        
+        @keyframes slideInDown {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes slideInUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        .slide.active {
+            display: flex;
+        }
+        
+        .slide:not(.active) {
+            display: none;
+        }
+        
+        /* Gradient backgrounds for each slide */
+        .slide:nth-child(1) { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .slide:nth-child(2) { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .slide:nth-child(3) { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .slide:nth-child(4) { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+        .slide:nth-child(5) { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+        .slide:nth-child(6) { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); }
+        .slide:nth-child(7) { background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); }
+        .slide:nth-child(8) { background: linear-gradient(135deg, #ff8a80 0%, #ea80fc 100%); }
+        .slide:nth-child(9) { background: linear-gradient(135deg, #8fd3f4 0%, #84fab0 100%); }
+        .slide:nth-child(10) { background: linear-gradient(135deg, #d299c2 0%, #fef9d7 100%); }
     </style>
 </head>
-<body class="bg-gray-100">
-    <div id="slides" class="relative">
-        <!-- Slide 1: Introduction -->
-        <section class="bg-gradient-to-r from-blue-200 to-teal-200">
-            <div class="animated-bg" id="bg-slide1"></div>
-            <div class="title">Millennials vs Gen Z</div>
-            <div class="name">Presented by: Speaker 1</div>
-            <div class="split">
-                <div class="column">
-                    <h3>Millennials Meme</h3>
-                    <img src="placeholder-meme1.jpg" alt="Millennial Meme" style="width: 100%; max-width: 500px;" />
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+    
+    <!-- Slide 1: Introduction -->
+    <div class="slide active">
+        <div class="floating-shapes">
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+        </div>
+        <div class="slide-counter">1 / 10</div>
+        <h1 class="title">Millennials vs Gen Z</h1>
+        <p class="presenter">The Ultimate Generational Showdown</p>
+        
+        <div class="content-wrapper">
+            <div class="generation-card">
+                <h2 class="gen-title">Millennials</h2>
+                <div class="meme-container">
+                    <h3 class="meme-title">Classic Millennial Mood</h3>
+                    <img src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Millennial working on laptop with coffee" class="meme-image">
                 </div>
-                <div class="column">
-                    <h3>Gen Z Meme</h3>
-                    <img src="placeholder-meme1-genz.jpg" alt="Gen Z Meme" style="width: 100%; max-width: 500px;" />
-                </div>
+                <ul class="traits-list">
+                    <li>Born 1981-1996 (ages 27-42)</li>
+                    <li>Witnessed the rise of the internet</li>
+                    <li>Survived the 2008 financial crisis</li>
+                    <li>Pioneers of social media</li>
+                    <li>Obsessed with work-life balance</li>
+                </ul>
+                <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Millennial lifestyle" class="lifestyle-image">
             </div>
-            <div class="split">
-                <div class="column">
-                    <h3>Millennials</h3>
-                    <ul>
-                        <li>Pioneered social media platforms like Facebook</li>
-                        <li>Faced 2008 recession, shaping frugality</li>
-                        <li>Value work-life balance but often overwork</li>
-                        <li>Nostalgic for 90s pop culture</li>
-                        <li>Adopted early smartphones with enthusiasm</li>
-                    </ul>
-                    <img src="placeholder-millennial1.jpg" alt="Millennial Slide Image" />
+            
+            <div class="generation-card">
+                <h2 class="gen-title">Gen Z</h2>
+                <div class="meme-container">
+                    <h3 class="meme-title">Gen Z Energy</h3>
+                    <img src="https://images.unsplash.com/photo-1609081219090-a6d81d3085bf?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Gen Z taking selfie" class="meme-image">
                 </div>
-                <div class="column">
-                    <h3>Gen Z</h3>
-                    <ul>
-                        <li>Grew up with TikTok and short-form content</li>
-                        <li>Prioritizes mental health and authenticity</li>
-                        <li>Entrepreneurial with side hustles</li>
-                        <li>Revives Y2K fashion trends</li>
-                        <li>Digital natives with instant tech mastery</li>
-                    </ul>
-                    <img src="placeholder-genz1.jpg" alt="Gen Z Slide Image" />
-                </div>
+                <ul class="traits-list">
+                    <li>Born 1997-2012 (ages 11-26)</li>
+                    <li>True digital natives</li>
+                    <li>Shaped by COVID-19 pandemic</li>
+                    <li>TikTok is their news source</li>
+                    <li>Mental health advocates</li>
+                </ul>
+                <img src="https://images.unsplash.com/photo-1616831300863-fa86c68c2619?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Gen Z lifestyle" class="lifestyle-image">
             </div>
-            <footer>Slide 1 - Introduction</footer>
-        </section>
-
-        <!-- Slide 2: Communication Styles -->
-        <section class="bg-gradient-to-r from-purple-200 to-indigo-200">
-            <div class="animated-bg" id="bg-slide2"></div>
-            <div class="title">Communication Styles</div>
-            <div class="name">Presented by: Speaker 2</div>
-            <div class="split">
-                <div class="column">
-                    <h3>Millennials Meme</h3>
-                    <img src="placeholder-meme2.jpg" alt="Millennial Meme" style="width: 100%; max-width: 500px;" />
-                </div>
-                <div class="column">
-                    <h3>Gen Z Meme</h3>
-                    <img src="placeholder-meme2-genz.jpg" alt="Gen Z Meme" style="width: 100%; max-width: 500px;" />
-                </div>
-            </div>
-            <div class="split">
-                <div class="column">
-                    <h3>Millennials</h3>
-                    <ul>
-                        <li>Writes full emails with proper grammar</li>
-                        <li>Uses Facebook and Instagram religiously</li>
-                        <li>Prefers phone calls for important talks</li>
-                        <li>Complete sentences in texts</li>
-                        <li>Emoticons over emojis</li>
-                    </ul>
-                    <img src="placeholder-millennial2.jpg" alt="Millennial Slide Image" />
-                </div>
-                <div class="column">
-                    <h3>Gen Z</h3>
-                    <ul>
-                        <li>Says everything in 3 words or less</li>
-                        <li>TikTok comments are their habitat</li>
-                        <li>Avoids phone calls at all costs</li>
-                        <li>“No cap fr fr” is grammar</li>
-                        <li>Communicates via memes and GIFs</li>
-                    </ul>
-                    <img src="placeholder-genz2.jpg" alt="Gen Z Slide Image" />
-                </div>
-            </div>
-            <footer>Slide 2 - Communication Styles</footer>
-        </section>
-
-        <!-- Slide 3: Technology Relationship -->
-        <section class="bg-gradient-to-r from-green-200 to-lime-200">
-            <div class="animated-bg" id="bg-slide3"></div>
-            <div class="title">Technology Relationship</div>
-            <div class="name">Presented by: Speaker 3</div>
-            <div class="split">
-                <div class="column">
-                    <h3>Millennials Meme</h3>
-                    <img src="placeholder-meme3.jpg" alt="Millennial Meme" style="width: 100%; max-width: 500px;" />
-                </div>
-                <div class="column">
-                    <h3>Gen Z Meme</h3>
-                    <img src="placeholder-meme3-genz.jpg" alt="Gen Z Meme" style="width: 100%; max-width: 500px;" />
-                </div>
-            </div>
-            <div class="split">
-                <div class="column">
-                    <h3>Millennials</h3>
-                    <ul>
-                        <li>Remembers dial-up internet struggles</li>
-                        <li>Learned social media as adults</li>
-                        <li>Still checks Facebook occasionally</li>
-                        <li>Owned hundreds of CDs</li>
-                        <li>Smartphones are magical but manageable</li>
-                    </ul>
-                    <img src="placeholder-millennial3.jpg" alt="Millennial Slide Image" />
-                </div>
-                <div class="column">
-                    <h3>Gen Z</h3>
-                    <ul>
-                        <li>Born with smartphones in hand</li>
-                        <li>Masters any app in 30 seconds</li>
-                        <li>Never known a world without Wi-Fi</li>
-                        <li>Thinks Facebook is for old people</li>
-                        <li>Creates TikTok dances effortlessly</li>
-                    </ul>
-                    <img src="placeholder-genz3.jpg" alt="Gen Z Slide Image" />
-                </div>
-            </div>
-            <footer>Slide 3 - Technology Relationship</footer>
-        </section>
-
-        <!-- Slide 4: Work Culture -->
-        <section class="bg-gradient-to-r from-yellow-200 to-amber-200">
-            <div class="animated-bg" id="bg-slide4"></div>
-            <div class="title">Work Culture</div>
-            <div class="name">Presented by: Speaker 4</div>
-            <div class="split">
-                <div class="column">
-                    <h3>Millennials Meme</h3>
-                    <img src="placeholder-meme4.jpg" alt="Millennial Meme" style="width: 100%; max-width: 500px;" />
-                </div>
-                <div class="column">
-                    <h3>Gen Z Meme</h3>
-                    <img src="placeholder-meme4-genz.jpg" alt="Gen Z Meme" style="width: 100%; max-width: 500px;" />
-                </div>
-            </div>
-            <div class="split">
-                <div class="column">
-                    <h3>Millennials</h3>
-                    <ul>
-                        <li>Replies to emails at 11 PM</li>
-                        <li>Pioneered hustle culture</li>
-                        <li>Loves open office spaces</li>
-                        <li>Endless meetings about meetings</li>
-                        <li>Believes in corporate ladder</li>
-                    </ul>
-                    <img src="placeholder-millennial4.jpg" alt="Millennial Slide Image" />
-                </div>
-                <div class="column">
-                    <h3>Gen Z</h3>
-                    <ul>
-                        <li>Work phone off after 5 PM</li>
-                        <li>Side hustles are the main hustle</li>
-                        <li>Remote work is a must</li>
-                        <li>“That’s an email” energy</li>
-                        <li>Prefers influencer over manager</li>
-                    </ul>
-                    <img src="placeholder-genz4.jpg" alt="Gen Z Slide Image" />
-                </div>
-            </div>
-            <footer>Slide 4 - Work Culture</footer>
-        </section>
-
-        <!-- Slide 5: Financial Habits -->
-        <section class="bg-gradient-to-r from-red-200 to-pink-200">
-            <div class="animated-bg" id="bg-slide5"></div>
-            <div class="title">Financial Habits</div>
-            <div class="name">Presented by: Speaker 5</div>
-            <div class="split">
-                <div class="column">
-                    <h3>Millennials Meme</h3>
-                    <img src="placeholder-meme5.jpg" alt="Millennial Meme" style="width: 100%; max-width: 500px;" />
-                </div>
-                <div class="column">
-                    <h3>Gen Z Meme</h3>
-                    <img src="placeholder-meme5-genz.jpg" alt="Gen Z Meme" style="width: 100%; max-width: 500px;" />
-                </div>
-            </div>
-            <div class="split">
-                <div class="column">
-                    <h3>Millennials</h3>
-                    <ul>
-                        <li>Blames avocado toast for no house</li>
-                        <li>Uses 47 budgeting apps</li>
-                        <li>Subscriptions drain bank account</li>
-                        <li>Target shopping sprees</li>
-                        <li>Retirement planning at 35</li>
-                    </ul>
-                    <img src="placeholder-millennial5.jpg" alt="Millennial Slide Image" />
-                </div>
-                <div class="column">
-                    <h3>Gen Z</h3>
-                    <ul>
-                        <li>Invests via meme advice</li>
-                        <li>Thrift shopping is trendy</li>
-                        <li>Plans for no house ownership</li>
-                        <li>Splits expenses via Venmo</li>
-                        <li>Financial tips from TikTok</li>
-                    </ul>
-                    <img src="placeholder-genz5.jpg" alt="Gen Z Slide Image" />
-                </div>
-            </div>
-            <footer>Slide 5 - Financial Habits</footer>
-        </section>
-
-        <!-- Slide 6: Social Media Usage -->
-        <section class="bg-gradient-to-r from-blue-300 to-indigo-300">
-            <div class="animated-bg" id="bg-slide6"></div>
-            <div class="title">Social Media Usage</div>
-            <div class="name">Presented by: Speaker 6</div>
-            <div class="split">
-                <div class="column">
-                    <h3>Millennials Meme</h3>
-                    <img src="placeholder-meme6.jpg" alt="Millennial Meme" style="width: 100%; max-width: 500px;" />
-                </div>
-                <div class="column">
-                    <h3>Gen Z Meme</h3>
-                    <img src="placeholder-meme6-genz.jpg" alt="Gen Z Meme" style="width: 100%; max-width: 500px;" />
-                </div>
-            </div>
-            <div class="split">
-                <div class="column">
-                    <h3>Millennials</h3>
-                    <ul>
-                        <li>Curates Instagram with filters</li>
-                        <li>Long Facebook status posts</li>
-                        <li>LinkedIn hustle posts</li>
-                        <li>Screenshots tweets for Stories</li>
-                        <li>2009 photos still on profile</li>
-                    </ul>
-                    <img src="placeholder-millennial6.jpg" alt="Millennial Slide Image" />
-                </div>
-                <div class="column">
-                    <h3>Gen Z</h3>
-                    <ul>
-                        <li>Unfiltered selfies with energy</li>
-                        <li>BeReal causes instant panic</li>
-                        <li>TikTok knows them best</li>
-                        <li>Multiple Instagram vibe accounts</li>
-                        <li>Twitter as a comedy show</li>
-                    </ul>
-                    <img src="placeholder-genz6.jpg" alt="Gen Z Slide Image" />
-                </div>
-            </div>
-            <footer>Slide 6 - Social Media Usage</footer>
-        </section>
-
-        <!-- Slide 7: Entertainment Preferences -->
-        <section class="bg-gradient-to-r from-orange-200 to-red-200">
-            <div class="animated-bg" id="bg-slide7"></div>
-            <div class="title">Entertainment Preferences</div>
-            <div class="name">Presented by: Speaker 7</div>
-            <div class="split">
-                <div class="column">
-                    <h3>Millennials Meme</h3>
-                    <img src="placeholder-meme7.jpg" alt="Millennial Meme" style="width: 100%; max-width: 500px;" />
-                </div>
-                <div class="column">
-                    <h3>Gen Z Meme</h3>
-                    <img src="placeholder-meme7-genz.jpg" alt="Gen Z Meme" style="width: 100%; max-width: 500px;" />
-                </div>
-            </div>
-            <div class="split">
-                <div class="column">
-                    <h3>Millennials</h3>
-                    <ul>
-                        <li>Binge-watches Netflix in one go</li>
-                        <li>Quotes The Office constantly</li>
-                        <li>Owns all streaming services</li>
-                        <li>Nostalgic for 90s/2000s</li>
-                        <li>Podcast addiction is real</li>
-                    </ul>
-                    <img src="placeholder-millennial7.jpg" alt="Millennial Slide Image" />
-                </div>
-                <div class="column">
-                    <h3>Gen Z</h3>
-                    <ul>
-                        <li>Watches TikTok for hours</li>
-                        <li>60-second content attention span</li>
-                        <li>Music via 15-second clips</li>
-                        <li>Revives 2000s Y2K trends</li>
-                        <li>Prefers vertical videos</li>
-                    </ul>
-                    <img src="placeholder-genz7.jpg" alt="Gen Z Slide Image" />
-                </div>
-            </div>
-            <footer>Slide 7 - Entertainment Preferences</footer>
-        </section>
-
-        <!-- Slide 8: Fashion & Lifestyle -->
-        <section class="bg-gradient-to-r from-pink-300 to-purple-300">
-            <div class="animated-bg" id="bg-slide8"></div>
-            <div class="title">Fashion & Lifestyle</div>
-            <div class="name">Presented by: Speaker 8</div>
-            <div class="split">
-                <div class="column">
-                    <h3>Millennials Meme</h3>
-                    <img src="placeholder-meme8.jpg" alt="Millennial Meme" style="width: 100%; max-width: 500px;" />
-                </div>
-                <div class="column">
-                    <h3>Gen Z Meme</h3>
-                    <img src="placeholder-meme8-genz.jpg" alt="Gen Z Meme" style="width: 100%; max-width: 500px;" />
-                </div>
-            </div>
-            <div class="split">
-                <div class="column">
-                    <h3>Millennials</h3>
-                    <ul>
-                        <li>Skinny jeans define them</li>
-                        <li>Side parts and straighteners</li>
-                        <li>Complex Starbucks orders</li>
-                        <li>Athleisure as formal wear</li>
-                        <li>Kills plants despite trying</li>
-                    </ul>
-                    <img src="placeholder-millennial8.jpg" alt="Millennial Slide Image" />
-                </div>
-                <div class="column">
-                    <h3>Gen Z</h3>
-                    <ul>
-                        <li>Mom jeans and crop tops</li>
-                        <li>Middle parts or bust</li>
-                        <li>Iced coffee in blizzards</li>
-                        <li>Thrift with designer mix</li>
-                        <li>Sustainability is key</li>
-                    </ul>
-                    <img src="placeholder-genz8.jpg" alt="Gen Z Slide Image" />
-                </div>
-            </div>
-            <footer>Slide 8 - Fashion & Lifestyle</footer>
-        </section>
-
-        <!-- Slide 9: Dating & Relationships -->
-        <section class="bg-gradient-to-r from-teal-200 to-cyan-200">
-            <div class="animated-bg" id="bg-slide9"></div>
-            <div class="title">Dating & Relationships</div>
-            <div class="name">Presented by: Speaker 9</div>
-            <div class="split">
-                <div class="column">
-                    <h3>Millennials Meme</h3>
-                    <img src="placeholder-meme9.jpg" alt="Millennial Meme" style="width: 100%; max-width: 500px;" />
-                </div>
-                <div class="column">
-                    <h3>Gen Z Meme</h3>
-                    <img src="placeholder-meme9-genz.jpg" alt="Gen Z Meme" style="width: 100%; max-width: 500px;" />
-                </div>
-            </div>
-            <div class="split">
-                <div class="column">
-                    <h3>Millennials</h3>
-                    <ul>
-                        <li>Swipes on apps while on Netflix</li>
-                        <li>“It’s complicated” status</li>
-                        <li>Instagram-perfect dates</li>
-                        <li>Mastered the art of ghosting</li>
-                        <li>Marriage fear but wants it</li>
-                    </ul>
-                    <img src="placeholder-millennial9.jpg" alt="Millennial Slide Image" />
-                </div>
-                <div class="column">
-                    <h3>Gen Z</h3>
-                    <ul>
-                        <li>Finds love in TikTok comments</li>
-                        <li>Emotional intelligence required</li>
-                        <li>Casual hangout dates</li>
-                        <li>No toxic behaviors allowed</li>
-                        <li>Happiness over marriage</li>
-                    </ul>
-                    <img src="placeholder-genz9.jpg" alt="Gen Z Slide Image" />
-                </div>
-            </div>
-            <footer>Slide 9 - Dating & Relationships</footer>
-        </section>
-
-        <!-- Slide 10: Conclusion -->
-        <section class="bg-gradient-to-r from-gray-200 to-blue-200">
-            <div class="animated-bg" id="bg-slide10"></div>
-            <div class="title">The Verdict</div>
-            <div class="name">Presented by: Speaker 10</div>
-            <div class="split">
-                <div class="column">
-                    <h3>Millennials Meme</h3>
-                    <img src="placeholder-meme10.jpg" alt="Millennial Meme" style="width: 100%; max-width: 500px;" />
-                </div>
-                <div class="column">
-                    <h3>Gen Z Meme</h3>
-                    <img src="placeholder-meme10-genz.jpg" alt="Gen Z Meme" style="width: 100%; max-width: 500px;" />
-                </div>
-            </div>
-            <div class="split">
-                <div class="column">
-                    <h3>Millennials</h3>
-                    <ul>
-                        <li>Struggling with the same economy</li>
-                        <li>Housing market nightmares</li>
-                        <li>Redefining work-life balance</li>
-                        <li>Caring about the planet</li>
-                        <li>Seeking authentic experiences</li>
-                    </ul>
-                    <img src="placeholder-millennial10.jpg" alt="Millennial Slide Image" />
-                </div>
-                <div class="column">
-                    <h3>Gen Z</h3>
-                    <ul>
-                        <li>Struggling with the same economy</li>
-                        <li>Housing market nightmares</li>
-                        <li>Redefining work-life balance</li>
-                        <li>Caring about the planet</li>
-                        <li>Seeking authentic experiences</li>
-                    </ul>
-                    <img src="placeholder-genz10.jpg" alt="Gen Z Slide Image" />
-                </div>
-            </div>
-            <footer>Slide 10 - Conclusion</footer>
-        </section>
+        </div>
     </div>
 
-    <div class="nav-buttons">
-        <button id="prev" class="bg-blue-500 text-white px-4 py-2 rounded mx-2">← Previous</button>
-        <button id="next" class="bg-blue-500 text-white px-4 py-2 rounded mx-2">Next →</button>
+    <!-- Slide 2: Communication -->
+    <div class="slide">
+        <div class="floating-shapes">
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+        </div>
+        <div class="slide-counter">2 / 10</div>
+        <h1 class="title">Communication Styles</h1>
+        <p class="presenter">How They Talk to the World</p>
+        
+        <div class="content-wrapper">
+            <div class="generation-card">
+                <h2 class="gen-title">Millennials</h2>
+                <div class="meme-container">
+                    <h3 class="meme-title">"Please find attached..."</h3>
+                    <img src="https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Professional email writing" class="meme-image">
+                </div>
+                <ul class="traits-list">
+                    <li>Writes proper emails with signatures</li>
+                    <li>Uses Facebook like a diary</li>
+                    <li>Still answers phone calls</li>
+                    <li>Uses full sentences in texts</li>
+                    <li>Emojis used sparingly and correctly</li>
+                </ul>
+                <img src="https://images.unsplash.com/photo-1556157382-97eda2d62296?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Professional communication" class="lifestyle-image">
+            </div>
+            
+            <div class="generation-card">
+                <h2 class="gen-title">Gen Z</h2>
+                <div class="meme-container">
+                    <h3 class="meme-title">"no cap fr fr"</h3>
+                    <img src="https://images.unsplash.com/photo-1611262588024-d12430b98920?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Texting on phone" class="meme-image">
+                </div>
+                <ul class="traits-list">
+                    <li>Communicates in 3-word sentences</li>
+                    <li>TikTok comments are literature</li>
+                    <li>Phone calls give them anxiety</li>
+                    <li>Invents new slang weekly</li>
+                    <li>Memes are a language</li>
+                </ul>
+                <img src="https://images.unsplash.com/photo-1611262588024-d12430b98920?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Mobile communication" class="lifestyle-image">
+            </div>
+        </div>
     </div>
 
-    <script>
-        // Slide navigation
-        let currentSlide = 0;
-        const slides = document.querySelectorAll('section');
-        document.getElementById('prev').addEventListener('click', () => {
-            if (currentSlide > 0) {
-                currentSlide--;
-                slides[currentSlide].scrollIntoView({ behavior: 'smooth' });
-            }
-        });
-        document.getElementById('next').addEventListener('click', () => {
-            if (currentSlide < slides.length - 1) {
-                currentSlide++;
-                slides[currentSlide].scrollIntoView({ behavior: 'smooth' });
-            }
-        });
+    <!-- Slide 3: Technology -->
+    <div class="slide">
+        <div class="floating-shapes">
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+        </div>
+        <div class="slide-counter">3 / 10</div>
+        <h1 class="title">Technology Relationship</h1>
+        <p class="presenter">Digital Natives vs Digital Adapters</p>
+        
+        <div class="content-wrapper">
+            <div class="generation-card">
+                <h2 class="gen-title">Millennials</h2>
+                <div class="meme-container">
+                    <h3 class="meme-title">Remember dial-up sounds?</h3>
+                    <img src="https://images.unsplash.com/photo-1606092195730-5d7b9af1efc5?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Old computer and technology" class="meme-image">
+                </div>
+                <ul class="traits-list">
+                    <li>Learned technology as it evolved</li>
+                    <li>Still checks Facebook occasionally</li>
+                    <li>Owns a digital camera collection</li>
+                    <li>Knows life before smartphones</li>
+                    <li>Appreciates tech simplicity</li>
+                </ul>
+                <img src="https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Learning technology" class="lifestyle-image">
+            </div>
+            
+            <div class="generation-card">
+                <h2 class="gen-title">Gen Z</h2>
+                <div class="meme-container">
+                    <h3 class="meme-title">Born with Wi-Fi</h3>
+                    <img src="https://images.unsplash.com/photo-1607703703520-bb638e84caf2?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Multiple devices and screens" class="meme-image">
+                </div>
+                <ul class="traits-list">
+                    <li>Intuitively understands any app</li>
+                    <li>Never lived without internet</li>
+                    <li>Uses 5 apps simultaneously</li>
+                    <li>Creates viral content casually</li>
+                    <li>Tech troubleshooter for family</li>
+                </ul>
+                <img src="https://images.unsplash.com/photo-1607703703520-bb638e84caf2?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Digital native lifestyle" class="lifestyle-image">
+            </div>
+        </div>
+    </div>
 
-        // GSAP animations for backgrounds
-        gsap.to('#bg-slide1', { duration: 5, backgroundPosition: '100% 100%', repeat: -1, yoyo: true });
-        gsap.to('#bg-slide2', { duration: 4, backgroundPosition: '0% 100%', repeat: -1, yoyo: true });
-        gsap.to('#bg-slide3', { duration: 6, backgroundPosition: '100% 0%', repeat: -1, yoyo: true });
-        gsap.to('#bg-slide4', { duration: 5, backgroundPosition: '0% 0%', repeat: -1, yoyo: true });
-        gsap.to('#bg-slide5', { duration: 4, backgroundPosition: '100% 100%', repeat: -1, yoyo: true });
-        gsap.to('#bg-slide6', { duration: 5, backgroundPosition: '0% 100%', repeat: -1, yoyo: true });
-        gsap.to('#bg-slide7', { duration: 6, backgroundPosition: '100% 0%', repeat: -1, yoyo: true });
-        gsap.to('#bg-slide8', { duration: 5, backgroundPosition: '0% 0%', repeat: -1, yoyo: true });
-        gsap.to('#bg-slide9', { duration: 4, backgroundPosition: '100% 100%', repeat: -1, yoyo: true });
-        gsap.to('#bg-slide10', { duration: 5, backgroundPosition: '0% 100%', repeat: -1, yoyo: true });
-    </script>
-</body>
-</html>
+    <!-- Slide 4: Work Culture -->
+    <div class="slide">
+        <div class="floating-shapes">
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+        </div>
+        <div class="slide-counter">4 / 10</div>
+        <h1 class="title">Work Culture</h1>
+        <p class="presenter">Hustle vs Balance</p>
+        
+        <div class="content-wrapper">
+            <div class="generation-card">
+                <h2 class="gen-title">Millennials</h2>
+                <div class="meme-container">
+                    <h3 class="meme-title">Rise and grind!</h3>
+                    <img src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Working late with coffee" class="meme-image">
+                </div>
+                <ul class="traits-list">
+                    <li>Invented hustle culture</li>
+                    <li>Responds to emails at midnight</li>
+                    <li>Believes in climbing the ladder</li>
+                    <li>Loves team building activities</li>
+                    <li>Works to live, lives to work</li>
+                </ul>
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Office work culture" class="lifestyle-image">
+            </div>
+            
+            <div class="generation-card">
+                <h2 class="gen-title">Gen Z</h2>
+                <div class="meme-container">
+                    <h3 class="meme-title">Work-life what?</h3>
+                    <img src="https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Relaxed work environment" class="meme-image">
+                </div>
+                <ul class="traits-list">
+                    <li>Boundaries are everything</li>
+                    <li>Side hustles are main hustles</li>
+                    <li>Remote work is non-negotiable</li>
+                    <li>Mental health days are real</li>
+                    <li>Values purpose over paychecks</li>
+                </ul>
+                <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Flexible work lifestyle" class="lifestyle-image">
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 5: Money & Finance -->
+    <div class="slide">
+        <div class="floating-shapes">
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+        </div>
+        <div class="slide-counter">5 / 10</div>
+        <h1 class="title">Money & Finance</h1>
+        <p class="presenter">Budgeting in Different Economies</p>
+        
+        <div class="content-wrapper">
+            <div class="generation-card">
+                <h2 class="gen-title">Millennials</h2>
+                <div class="meme-container">
+                    <h3 class="meme-title">Avocado toast broke us</h3>
+                    <img src="https://images.unsplash.com/photo-1603252109612-ffd69d7a3e76?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Avocado toast and coffee" class="meme-image">
+                </div>
+                <ul class="traits-list">
+                    <li>Blames housing market on toast</li>
+                    <li>Uses 47 different budgeting apps</li>
+                    <li>Subscription services drain accounts</li>
+                    <li>Target runs get out of control</li>
+                    <li>Retirement planning anxiety</li>
+                </ul>
+                <img src="https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Financial planning" class="lifestyle-image">
+            </div>
+            
+            <div class="generation-card">
+                <h2 class="gen-title">Gen Z</h2>
+                <div class="meme-container">
+                    <h3 class="meme-title">Investing in memes</h3>
+                    <img src="https://images.unsplash.com/photo-1621981386829-9b458a2cddde?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Phone with investment apps" class="meme-image">
+                </div>
+                <ul class="traits-list">
+                    <li>Gets financial advice from TikTok</li>
+                    <li>Thrift shopping is trendy</li>
+                    <li>Crypto is their savings account</li>
+                    <li>Split everything via Venmo</li>
+                    <li>Expects economic collapse</li>
+                </ul>
+                <img src="https://images.unsplash.com/photo-1621981386829-9b458a2cddde?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Digital investing" class="lifestyle-image">
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 6: Social Media -->
+    <div class="slide">
+        <div class="floating-shapes">
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+        </div>
+        <div class="slide-counter">6 / 10</div>
+        <h1 class="title">Social Media Usage</h1>
+        <p class="presenter">Platform Preferences</p>
+        
+        <div class="content-wrapper">
+            <div class="generation-card">
+                <h2 class="gen-title">Millennials</h2>
+                <div class="meme-container">
+                    <h3 class="meme-title">Curated perfection</h3>
+                    <img src="https://images.unsplash.com/photo-1611262588024-d12430b98920?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Perfectly curated Instagram feed" class="meme-image">
+                </div>
+                <ul class="traits-list">
+                    <li>Instagram with Valencia filter</li>
+                    <li>Facebook relationship status updates</li>
+                    <li>LinkedIn inspirational quotes</li>
+                    <li>Screenshots tweets for Stories</li>
+                    <li>Still has 2009 profile photos</li>
+                </ul>
+                <img src="https://images.unsplash.com/photo-1611262588024-d12430b98920?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Social media curation" class="lifestyle-image">
+            </div>
+            
+            <div class="generation-card">
+                <h2 class="gen-title">Gen Z</h2>
+                <div class="meme-container">
+                    <h3 class="meme-title">Authentic chaos</h3>
+                    <img src="https://images.unsplash.com/photo-1609081219090-a6d81d3085bf?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Authentic unfiltered selfie" class="meme-image">
+                </div>
+                <ul class="traits-list">
+                    <li>BeReal gives them panic attacks</li>
+                    <li>TikTok algorithm knows them</li>
+                    <li>Multiple Instagram accounts</li>
+                    <li>Twitter is their comedy show</li>
+                    <li>Unfiltered authenticity</li>
+                </ul>
+                <img src="https://images.unsplash.com/photo-1609081219090-a6d81d3085bf?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Authentic social media" class="lifestyle-image">
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 7: Entertainment -->
+    <div class="slide">
+        <div class="floating-shapes">
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+        </div>
+        <div class="slide-counter">7 / 10</div>
+        <h1 class="title">Entertainment</h1>
+        <p class="presenter">Content Consumption Habits</p>
+        
+        <div class="content-wrapper">
+            <div class="generation-card">
+                <h2 class="gen-title">Millennials</h2>
+                <div class="meme-container">
+                    <h3 class="meme-title">Netflix and commit</h3>
+                    <img src="https://images.unsplash.com/photo-1489599063810-c6a0bd8c5f1c?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Watching Netflix on laptop" class="meme-image">
+                </div>
+                <ul class="traits-list">
+                    <li>Binge-watches entire series</li>
+                    <li>Quotes The Office religiously</li>
+                    <li>Owns every streaming service</li>
+                    <li>Podcast addiction is real</li>
+                    <li>Nostalgic for 90s/2000s</li>
+                </ul>
+                <img src="https://images.unsplash.com/photo-1489599063810-c6a0bd8c5f1c?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Binge watching" class="lifestyle-image">
+            </div>
+            
+            <div class="generation-card">
+                <h2 class="gen-title">Gen Z</h2>
+                <div class="meme-container">
+                    <h3
