@@ -186,6 +186,9 @@
         .meme-container {
             text-align: center;
             margin-bottom: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         
         .meme-title {
@@ -199,11 +202,14 @@
         .meme-image {
             width: 100%;
             max-width: 350px;
-            height: 200px;
-            object-fit: cover;
+            height: auto;
+            max-height: 220px;
+            object-fit: contain;
             border-radius: 15px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease;
+            display: block;
+            margin: 0 auto;
         }
         
         .meme-image:hover {
@@ -242,11 +248,14 @@
         .lifestyle-image {
             width: 100%;
             max-width: 350px;
-            height: 180px;
-            object-fit: cover;
+            height: auto;
+            max-height: 250px;
+            object-fit: contain;
             border-radius: 15px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease;
+            display: block;
+            margin: 0 auto;
         }
         
         .lifestyle-image:hover {
