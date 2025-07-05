@@ -22,15 +22,16 @@
         }
         
         .slide {
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: flex-start;
             align-items: center;
-            padding: 1rem;
+            padding: 2rem 1rem;
             position: relative;
             overflow-y: auto;
             scroll-behavior: smooth;
+            padding-top: 120px; /* Space for fixed title */
         }
         
         .slide::-webkit-scrollbar {
@@ -93,6 +94,39 @@
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
             animation: slideInDown 1s ease-out;
             text-align: center;
+        }
+        
+        .common-title {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.95), rgba(118, 75, 162, 0.95));
+            backdrop-filter: blur(10px);
+            padding: 1rem;
+            z-index: 1000;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            transform: translateY(-100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .common-title.show {
+            transform: translateY(0);
+        }
+        
+        .common-title h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .common-title p {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin: 0.5rem 0 0 0;
         }
         
         .presenter {
@@ -274,7 +308,7 @@
             height: 4px;
             background: linear-gradient(90deg, #667eea, #764ba2);
             transition: width 0.5s ease;
-            z-index: 100;
+            z-index: 1001;
         }
         
         @keyframes slideInDown {
@@ -411,6 +445,12 @@
 </head>
 <body>
     <div class="progress-bar" id="progressBar"></div>
+    
+    <!-- Common Title -->
+    <div class="common-title" id="commonTitle">
+        <h1>Millennials vs Gen Z 😂</h1>
+        <p>The Ultimate Generational Showdown - Interactive Presentation</p>
+    </div>
     
     <!-- Slide 1: Introduction -->
     <div class="slide active">
@@ -927,6 +967,9 @@
             document.getElementById('prevBtn').disabled = index === 0;
             document.getElementById('nextBtn').disabled = index === totalSlides - 1;
             
+            // Reset common title when changing slides
+            document.getElementById('commonTitle').classList.remove('show');
+            
             currentSlide = index;
         }
         
@@ -1027,6 +1070,24 @@
             yoyo: true,
             ease: "power1.inOut",
             stagger: 0.3
+        });
+        
+        // Common title scroll detection
+        function handleScroll() {
+            const currentSlideElement = slides[currentSlide];
+            const scrollTop = currentSlideElement.scrollTop;
+            const commonTitle = document.getElementById('commonTitle');
+            
+            if (scrollTop > 50) {
+                commonTitle.classList.add('show');
+            } else {
+                commonTitle.classList.remove('show');
+            }
+        }
+        
+        // Add scroll event listeners to all slides
+        slides.forEach(slide => {
+            slide.addEventListener('scroll', handleScroll);
         });
     </script>
 </body>
