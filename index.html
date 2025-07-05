@@ -31,6 +31,7 @@
             position: relative;
             overflow-y: auto;
             scroll-behavior: smooth;
+            scroll-snap-type: y mandatory;
         }
         
         .slide::-webkit-scrollbar {
@@ -86,7 +87,7 @@
         }
         
         .title {
-            font-size: 3.5rem;
+            font-size: 4.5rem;
             font-weight: 700;
             color: white;
             margin-bottom: 1rem;
@@ -96,7 +97,7 @@
         }
         
         .presenter {
-            font-size: 1.2rem;
+            font-size: 1.8rem;
             color: rgba(255, 255, 255, 0.9);
             margin-bottom: 1.5rem;
             animation: fadeIn 1s ease-out 0.5s both;
@@ -113,7 +114,7 @@
         
         .generation-card {
             flex: 1;
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.7);
             border-radius: 20px;
             padding: 1.5rem;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
@@ -129,7 +130,7 @@
         }
         
         .gen-title {
-            font-size: 2rem;
+            font-size: 2.8rem;
             font-weight: 600;
             color: #2d3748;
             margin-bottom: 1.5rem;
@@ -155,7 +156,7 @@
         }
         
         .meme-title {
-            font-size: 1.1rem;
+            font-size: 1.5rem;
             font-weight: 600;
             color: #4a5568;
             margin-bottom: 1rem;
@@ -184,7 +185,7 @@
         .traits-list li {
             padding: 0.75rem 0;
             color: #2d3748;
-            font-size: 0.95rem;
+            font-size: 1.3rem;
             border-bottom: 1px solid rgba(0, 0, 0, 0.05);
             position: relative;
             padding-left: 2rem;
@@ -369,10 +370,13 @@
         
         /* Special styling for the conclusion slide */
         .conclusion-card {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85));
-            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.7));
+            border: 3px solid rgba(102, 126, 234, 0.3);
             position: relative;
             overflow: hidden;
+            max-width: 800px;
+            margin: 0 auto;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
         }
         
         .conclusion-card::before {
@@ -382,8 +386,22 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            background: linear-gradient(45deg, transparent, rgba(102, 126, 234, 0.1), transparent);
             animation: shimmer 3s infinite;
+        }
+        
+        .conclusion-card .gen-title {
+            font-size: 3.5rem;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .conclusion-card .traits-list li {
+            font-size: 1.5rem;
+            text-align: center;
+            padding: 1rem 0;
         }
         
         @keyframes shimmer {
@@ -784,7 +802,7 @@
         <p class="presenter">What We Actually Have in Common (Peace Treaty) 🤝</p>
         
         <div class="content-wrapper">
-            <div class="generation-card conclusion-card">
+            <div class="generation-card conclusion-card" style="max-width: 800px; margin: 0 auto;">
                 <h2 class="gen-title">🏆 THE VERDICT 🏆</h2>
                 <div class="meme-container">
                     <h3 class="meme-title">"We're all in this together"</h3>
@@ -801,8 +819,8 @@
                     <li>Both want to make the world better 🌟</li>
                 </ul>
                 <div style="text-align: center; margin-top: 2rem;">
-                    <h3 style="color: #667eea; font-size: 1.5rem; margin-bottom: 1rem;">🤝 PEACE TREATY 🤝</h3>
-                    <p style="color: #4a5568; font-style: italic; font-size: 1.1rem;">
+                    <h3 style="color: #667eea; font-size: 2rem; margin-bottom: 1rem;">🤝 PEACE TREATY 🤝</h3>
+                    <p style="color: #4a5568; font-style: italic; font-size: 1.5rem;">
                         "At the end of the day, we're all just trying to figure out life together. 
                         Millennials paved the way, Gen Z is taking it to the next level. 
                         Let's respect each other's journey and laugh about our differences! 🎉"
@@ -940,14 +958,14 @@
             }
         });
         
-        // Mouse wheel navigation
-        document.addEventListener('wheel', (e) => {
-            if (e.deltaY > 0) {
-                nextSlide();
-            } else if (e.deltaY < 0) {
-                prevSlide();
-            }
-        });
+        // Mouse wheel navigation - DISABLED to prevent accidental slide changes
+        // document.addEventListener('wheel', (e) => {
+        //     if (e.deltaY > 0) {
+        //         nextSlide();
+        //     } else if (e.deltaY < 0) {
+        //         prevSlide();
+        //     }
+        // });
         
         // Initialize
         showSlide(0);
