@@ -645,6 +645,27 @@
         @page coverLandscape {
             size: A4 landscape;
         }
+        .slide {
+            page-break-after: always !important;
+            page-break-inside: avoid !important;
+            break-after: page !important;
+            break-inside: avoid !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            min-height: unset !important;
+            max-height: 100vh !important;
+            overflow: hidden !important;
+            box-sizing: border-box !important;
+            position: relative !important;
+            background-clip: border-box !important;
+            background-size: cover !important;
+            background-repeat: no-repeat !important;
+            background-position: center center !important;
+        }
+        .slide:last-child {
+            page-break-after: auto !important;
+            break-after: auto !important;
+        }
     </style>
 </head>
 <body>
