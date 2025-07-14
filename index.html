@@ -1239,7 +1239,7 @@
             slide.addEventListener('scroll', handleScroll);
         });
 
-        // PRINT/DOWNLOAD BUTTON (scale each slide to fit A4, preserve backgrounds and all content)
+        // PRINT/DOWNLOAD BUTTON (screenshot full browser view of each slide, fit to PDF page)
         document.getElementById('printBtn').addEventListener('click', async function() {
             const slides = document.querySelectorAll('.slide');
             const pdf = new window.jspdf.jsPDF({
@@ -1247,10 +1247,6 @@
                 unit: 'pt',
                 format: 'a4'
             });
-
-            // A4 landscape in px at 96dpi
-            const pageWidthPx = 1123;
-            const pageHeightPx = 794;
 
             // Hide navigation and print button
             document.querySelector('.navigation').style.display = 'none';
@@ -1261,6 +1257,10 @@
             slides.forEach((slide, i) => {
                 if (slide.classList.contains('active')) activeIndex = i;
             });
+
+            // Get the viewport size (what the user sees)
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
 
             for (let i = 0; i < slides.length; i++) {
                 slides.forEach((slide, j) => {
@@ -1279,40 +1279,41 @@
                     });
                 }));
 
-                // --- SCALE CONTENT TO FIT ---
-                // Remove any previous scaling
-                slides[i].style.transform = '';
-                slides[i].style.transformOrigin = '';
-
-                // Get bounding box
-                const rect = slides[i].getBoundingClientRect();
-                const scale = Math.min(pageWidthPx / rect.width, pageHeightPx / rect.height, 1);
-
-                slides[i].style.transformOrigin = 'top left';
-                slides[i].style.transform = `scale(${scale})`;
-
-                // Wait a tick for layout
-                await new Promise(r => setTimeout(r, 50));
-
-                // Render to canvas
-                const canvas = await html2canvas(slides[i], {
+                // Take a screenshot of the visible area
+                const canvas = await html2canvas(document.body, {
                     scale: 2,
                     useCORS: true,
                     backgroundColor: null,
-                    width: pageWidthPx,
-                    height: pageHeightPx
+                    width: viewportWidth,
+                    height: viewportHeight,
+                    windowWidth: viewportWidth,
+                    windowHeight: viewportHeight,
+                    scrollX: window.scrollX,
+                    scrollY: window.scrollY
                 });
                 const imgData = canvas.toDataURL('image/jpeg', 1.0);
 
+                // Fit the screenshot to the PDF page
                 const pageWidth = pdf.internal.pageSize.getWidth();
                 const pageHeight = pdf.internal.pageSize.getHeight();
+                const imgAspect = canvas.width / canvas.height;
+                const pageAspect = pageWidth / pageHeight;
+
+                let renderWidth, renderHeight, x, y;
+                if (imgAspect > pageAspect) {
+                    renderWidth = pageWidth;
+                    renderHeight = pageWidth / imgAspect;
+                    x = 0;
+                    y = (pageHeight - renderHeight) / 2;
+                } else {
+                    renderHeight = pageHeight;
+                    renderWidth = pageHeight * imgAspect;
+                    x = (pageWidth - renderWidth) / 2;
+                    y = 0;
+                }
 
                 if (i > 0) pdf.addPage();
-                pdf.addImage(imgData, 'JPEG', 0, 0, pageWidth, pageHeight);
-
-                // Remove scaling for next slide
-                slides[i].style.transform = '';
-                slides[i].style.transformOrigin = '';
+                pdf.addImage(imgData, 'JPEG', x, y, renderWidth, renderHeight);
             }
 
             pdf.save('Millennials-vs-GenZ-Presentation.pdf');
@@ -1320,8 +1321,6 @@
             // Restore all slides and navigation
             slides.forEach((slide, i) => {
                 slide.style.display = (i === activeIndex) ? 'flex' : 'none';
-                slide.style.transform = '';
-                slide.style.transformOrigin = '';
             });
             document.querySelector('.navigation').style.display = '';
             document.getElementById('printBtn').style.display = '';
