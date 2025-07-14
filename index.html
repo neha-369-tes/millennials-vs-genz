@@ -1239,48 +1239,84 @@
             slide.addEventListener('scroll', handleScroll);
         });
 
-        // PRINT/DOWNLOAD BUTTON (robust: all slides visible, A4 landscape, images loaded, white background)
+        // PRINT/DOWNLOAD BUTTON (wrapper div for exact A4 fit, no zoom/crop)
         document.getElementById('printBtn').addEventListener('click', async function() {
             document.querySelector('.navigation').style.display = 'none';
             this.style.display = 'none';
 
             const slides = document.querySelectorAll('.slide');
-            // Save original display and position
-            const originalStyles = [];
-            slides.forEach(slide => {
-                originalStyles.push({
-                    display: slide.style.display,
-                    position: slide.style.position
-                });
-                slide.style.display = 'block';
-                slide.style.position = 'static';
-                slide.style.background = '#fff';
-                slide.style.width = '1123px'; // A4 landscape at 96dpi
-                slide.style.height = '794px';
-            });
-
-            // Wait for all images to load
-            await Promise.all(Array.from(document.images).map(img => {
-                if (img.complete) return Promise.resolve();
-                return new Promise(resolve => {
-                    img.onload = img.onerror = resolve;
-                });
-            }));
-
             const pdf = new window.jspdf.jsPDF({
                 orientation: 'landscape',
                 unit: 'pt',
                 format: 'a4'
             });
 
+            // A4 landscape in px at 96dpi
+            const pageWidthPx = 1123;
+            const pageHeightPx = 794;
+
+            // Create a hidden container for rendering
+            let renderContainer = document.getElementById('renderContainer');
+            if (!renderContainer) {
+                renderContainer = document.createElement('div');
+                renderContainer.id = 'renderContainer';
+                document.body.appendChild(renderContainer);
+            }
+            renderContainer.style.position = 'fixed';
+            renderContainer.style.left = '-9999px';
+            renderContainer.style.top = '0';
+            renderContainer.style.width = pageWidthPx + 'px';
+            renderContainer.style.height = pageHeightPx + 'px';
+            renderContainer.style.background = '#fff';
+            renderContainer.style.zIndex = '-1';
+
             for (let i = 0; i < slides.length; i++) {
-                const slide = slides[i];
-                const canvas = await html2canvas(slide, {
+                // Clone the slide
+                const clone = slides[i].cloneNode(true);
+
+                // Remove unwanted elements
+                Array.from(clone.querySelectorAll('.slide-counter, .navigation, #printBtn, .progress-bar, .common-title, .floating-shapes')).forEach(el => el.remove());
+
+                // Force layout for print
+                clone.style.display = 'block';
+                clone.style.position = 'relative';
+                clone.style.background = '#fff';
+                clone.style.width = '100%';
+                clone.style.height = '100%';
+                clone.style.margin = '0';
+                clone.style.padding = '0';
+                clone.style.overflow = 'auto';
+
+                // Create a wrapper for exact sizing
+                const wrapper = document.createElement('div');
+                wrapper.style.width = pageWidthPx + 'px';
+                wrapper.style.height = pageHeightPx + 'px';
+                wrapper.style.background = '#fff';
+                wrapper.style.overflow = 'hidden';
+                wrapper.appendChild(clone);
+
+                // Clear and append to render container
+                renderContainer.innerHTML = '';
+                renderContainer.appendChild(wrapper);
+
+                // Wait for images to load
+                await Promise.all(Array.from(clone.querySelectorAll('img')).map(img => {
+                    if (img.complete) return Promise.resolve();
+                    return new Promise(resolve => {
+                        img.onload = img.onerror = resolve;
+                    });
+                }));
+
+                // Wait a tick for layout
+                await new Promise(r => setTimeout(r, 50));
+
+                // Render to canvas
+                const canvas = await html2canvas(wrapper, {
                     scale: 2,
                     useCORS: true,
                     backgroundColor: '#fff',
-                    width: 1123,
-                    height: 794
+                    width: pageWidthPx,
+                    height: pageHeightPx
                 });
                 const imgData = canvas.toDataURL('image/jpeg', 1.0);
 
@@ -1293,18 +1329,14 @@
 
             pdf.save('Millennials-vs-GenZ-Presentation.pdf');
 
-            // Restore original styles
-            slides.forEach((slide, i) => {
-                slide.style.display = originalStyles[i].display;
-                slide.style.position = originalStyles[i].position;
-                slide.style.width = '';
-                slide.style.height = '';
-                slide.style.background = '';
-                if (!slide.classList.contains('active')) slide.style.display = 'none';
-            });
-
+            // Clean up
+            renderContainer.innerHTML = '';
             document.querySelector('.navigation').style.display = '';
             document.getElementById('printBtn').style.display = '';
+            // Restore only the active slide
+            slides.forEach((slide, i) => {
+                if (!slide.classList.contains('active')) slide.style.display = 'none';
+            });
         });
     </script>
 </body>
