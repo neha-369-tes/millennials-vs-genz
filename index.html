@@ -6,7 +6,8 @@
     <title>Millennials vs Gen Z - Interactive Presentation</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
         
@@ -506,9 +507,12 @@
                 display: none !important;
             }
             .slide {
-                min-height: 100vh !important;
-                height: 100vh !important;
                 page-break-after: always;
+                width: 100vw !important;
+                height: 100vh !important;
+                min-height: unset !important;
+                min-width: unset !important;
+                box-sizing: border-box;
                 box-shadow: none !important;
                 background: white !important;
                 color: #222 !important;
@@ -1235,35 +1239,61 @@
             slide.addEventListener('scroll', handleScroll);
         });
 
-        // PRINT/DOWNLOAD BUTTON
-        document.getElementById('printBtn').addEventListener('click', function() {
+        // PRINT/DOWNLOAD BUTTON (jsPDF + html2canvas, one slide per page, full fit)
+        document.getElementById('printBtn').addEventListener('click', async function() {
             // Hide navigation and print button for PDF
             document.querySelector('.navigation').style.display = 'none';
             this.style.display = 'none';
 
-            // Show all slides for printing
             const slides = document.querySelectorAll('.slide');
+            // Show all slides for printing
             slides.forEach(slide => slide.style.display = 'flex');
 
-            // Set up PDF options
-            const opt = {
-                margin:       0,
-                filename:     'Millennials-vs-GenZ-Presentation.pdf',
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#fff' },
-                jsPDF:        { unit: 'px', format: 'a4', orientation: 'landscape' },
-                pagebreak:    { mode: ['css', 'legacy'] }
-            };
+            // Create a new jsPDF instance
+            const pdf = new window.jspdf.jsPDF({
+                orientation: 'landscape',
+                unit: 'pt',
+                format: 'a4'
+            });
 
-            // Generate PDF from the slides container
-            html2pdf().from(document.body).set(opt).save().then(() => {
-                // Restore navigation and print button after download
-                document.querySelector('.navigation').style.display = '';
-                document.getElementById('printBtn').style.display = '';
-                // Restore only the active slide
-                slides.forEach((slide, i) => {
-                    if (!slide.classList.contains('active')) slide.style.display = 'none';
+            for (let i = 0; i < slides.length; i++) {
+                const slide = slides[i];
+                // Use html2canvas to render the slide as an image
+                const canvas = await html2canvas(slide, {
+                    scale: 2,
+                    useCORS: true,
+                    backgroundColor: '#fff',
+                    windowWidth: slide.scrollWidth,
+                    windowHeight: slide.scrollHeight
                 });
+                const imgData = canvas.toDataURL('image/jpeg', 1.0);
+
+                // Get A4 page size in points
+                const pageWidth = pdf.internal.pageSize.getWidth();
+                const pageHeight = pdf.internal.pageSize.getHeight();
+
+                // Calculate image dimensions to cover the page exactly
+                const imgWidth = canvas.width;
+                const imgHeight = canvas.height;
+                const ratio = Math.min(pageWidth / imgWidth, pageHeight / imgHeight);
+
+                const finalWidth = imgWidth * ratio;
+                const finalHeight = imgHeight * ratio;
+                const x = (pageWidth - finalWidth) / 2;
+                const y = (pageHeight - finalHeight) / 2;
+
+                if (i > 0) pdf.addPage();
+                pdf.addImage(imgData, 'JPEG', x, y, finalWidth, finalHeight);
+            }
+
+            pdf.save('Millennials-vs-GenZ-Presentation.pdf');
+
+            // Restore navigation and print button after download
+            document.querySelector('.navigation').style.display = '';
+            document.getElementById('printBtn').style.display = '';
+            // Restore only the active slide
+            slides.forEach((slide, i) => {
+                if (!slide.classList.contains('active')) slide.style.display = 'none';
             });
         });
     </script>
