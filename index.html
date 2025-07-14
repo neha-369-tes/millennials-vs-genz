@@ -584,6 +584,14 @@
                 text-align: center !important;
             }
         }
+        @media print {
+            #cover-slide {
+                page: coverLandscape;
+            }
+        }
+        @page coverLandscape {
+            size: A4 landscape;
+        }
     </style>
 </head>
 <body>
