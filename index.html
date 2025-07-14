@@ -1239,7 +1239,7 @@
             slide.addEventListener('scroll', handleScroll);
         });
 
-        // PRINT/DOWNLOAD BUTTON (screenshot full browser view of each slide, fit to PDF page)
+        // PRINT/DOWNLOAD BUTTON (force slide to viewport, capture node, restore styles)
         document.getElementById('printBtn').addEventListener('click', async function() {
             const slides = document.querySelectorAll('.slide');
             const pdf = new window.jspdf.jsPDF({
@@ -1263,12 +1263,30 @@
             const viewportHeight = window.innerHeight;
 
             for (let i = 0; i < slides.length; i++) {
+                // Hide all slides except the one being rendered
                 slides.forEach((slide, j) => {
-                    slide.style.display = (i === j) ? 'flex' : 'none';
+                    slide.style.display = (i === j) ? 'block' : 'none';
                 });
 
-                // Scroll into view and wait for layout
-                slides[i].scrollIntoView();
+                // Save original styles
+                const originalStyle = slides[i].getAttribute('style') || '';
+                const originalBodyOverflow = document.body.style.overflow;
+
+                // Make the slide fill the viewport and be on top
+                slides[i].style.position = 'fixed';
+                slides[i].style.left = '0';
+                slides[i].style.top = '0';
+                slides[i].style.width = '100vw';
+                slides[i].style.height = '100vh';
+                slides[i].style.zIndex = '9999';
+                slides[i].style.margin = '0';
+                slides[i].style.padding = '0';
+                slides[i].style.backgroundClip = 'padding-box';
+                slides[i].style.overflow = 'visible';
+
+                document.body.style.overflow = 'hidden';
+
+                // Wait for layout
                 await new Promise(r => setTimeout(r, 100));
 
                 // Wait for images to load
@@ -1279,8 +1297,8 @@
                     });
                 }));
 
-                // Take a screenshot of the visible area
-                const canvas = await html2canvas(document.body, {
+                // Take a screenshot of the slide node itself
+                const canvas = await html2canvas(slides[i], {
                     scale: 2,
                     useCORS: true,
                     backgroundColor: null,
@@ -1314,6 +1332,10 @@
 
                 if (i > 0) pdf.addPage();
                 pdf.addImage(imgData, 'JPEG', x, y, renderWidth, renderHeight);
+
+                // Restore styles
+                slides[i].setAttribute('style', originalStyle);
+                document.body.style.overflow = originalBodyOverflow;
             }
 
             pdf.save('Millennials-vs-GenZ-Presentation.pdf');
