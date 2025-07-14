@@ -529,18 +529,56 @@
                 min-width: unset !important;
                 box-sizing: border-box;
                 box-shadow: none !important;
-                background: inherit !important;
-                background-color: #ff6a00 !important;
-                background-image: linear-gradient(135deg, #ff6a00 0%, #ee0979 100%) !important;
-                color: #222 !important;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+                color: #fff !important;
                 overflow: visible !important;
-                padding-top: 2rem !important;
+                padding: 0 !important;
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
-                /* page-break-inside: avoid !important; -- removed to allow breaking */
             }
-            .slide:last-child {
-                page-break-after: auto;
+            .slide:first-child {
+                page-break-before: auto !important;
+                break-before: auto !important;
+            }
+            /* First slide (cover) - presenters big and listed vertically */
+            #cover-slide h1 {
+                font-size: 5rem !important;
+                font-weight: 900 !important;
+                margin-bottom: 2rem !important;
+                letter-spacing: 2px !important;
+                text-align: center !important;
+            }
+            #cover-slide h2 {
+                font-size: 2.5rem !important;
+                font-weight: 700 !important;
+                margin-bottom: 2rem !important;
+                text-align: center !important;
+            }
+            #cover-slide h3 {
+                font-size: 2rem !important;
+                font-weight: 700 !important;
+                margin-bottom: 1.2rem !important;
+                text-align: center !important;
+            }
+            #cover-slide ul {
+                font-size: 1.6rem !important;
+                line-height: 2.2rem !important;
+                text-align: center !important;
+                padding: 0 !important;
+                margin: 0 auto !important;
+                width: 100% !important;
+                max-width: 600px !important;
+                display: block !important;
+            }
+            #cover-slide ul li {
+                font-size: 1.6rem !important;
+                margin: 0.7rem 0 !important;
+                display: block !important;
+                min-width: unset !important;
+            }
+            #cover-slide div[style*="text-align: center"] {
+                margin-top: 0 !important;
+                padding: 0 !important;
             }
             .floating-shapes, .shape {
                 display: none !important;
@@ -553,7 +591,6 @@
                 width: 100% !important;
                 gap: 2rem !important;
                 text-align: left !important;
-                /* page-break-inside: avoid !important; -- removed to allow breaking */
             }
             .generation-card, .conclusion-card {
                 width: 48% !important;
@@ -586,106 +623,6 @@
             .presenter, .speaker, .gen-title, .meme-title, ul.traits-list, h1.title {
                 text-align: center !important;
             }
-        }
-        @media print {
-            #cover-slide {
-                page: coverLandscape;
-                display: flex !important;
-                flex-direction: column !important;
-                align-items: center !important;
-                justify-content: center !important;
-                min-height: unset !important;
-                height: 100vh !important;
-                width: 100vw !important;
-                padding: 0 !important;
-                margin: 0 !important;
-            }
-            #cover-slide h1 {
-                font-size: 5.5rem !important;
-                font-weight: 900 !important;
-                margin-bottom: 2.5rem !important;
-                letter-spacing: 3px !important;
-                text-align: center !important;
-            }
-            #cover-slide h2 {
-                font-size: 3rem !important;
-                font-weight: 700 !important;
-                margin-bottom: 3rem !important;
-                text-align: center !important;
-            }
-            #cover-slide h3 {
-                font-size: 2.2rem !important;
-                font-weight: 700 !important;
-                margin-bottom: 1.5rem !important;
-                text-align: center !important;
-            }
-            #cover-slide ul {
-                font-size: 1.7rem !important;
-                line-height: 2.3rem !important;
-                text-align: center !important;
-                padding: 0 !important;
-                margin: 0 auto !important;
-                width: 100% !important;
-                max-width: 900px !important;
-                display: flex !important;
-                flex-wrap: wrap !important;
-                justify-content: center !important;
-                gap: 1.2rem !important;
-            }
-            #cover-slide ul li {
-                font-size: 1.7rem !important;
-                margin: 0.5rem 1.5rem !important;
-                display: inline-block !important;
-                min-width: 250px !important;
-            }
-            #cover-slide div[style*="text-align: center"] {
-                margin-top: 0 !important;
-                padding: 0 !important;
-            }
-        }
-        @page coverLandscape {
-            size: A4 landscape;
-        }
-        @media print {
-            html, body {
-                background: none !important;
-            }
-            .slide {
-                width: 100vw !important;
-                height: 100vh !important;
-                min-height: unset !important;
-                min-width: unset !important;
-                box-sizing: border-box !important;
-                margin: 0 !important;
-                padding: 0 !important;
-                display: flex !important;
-                flex-direction: column !important;
-                align-items: center !important;
-                justify-content: flex-start !important;
-                page-break-before: always !important;
-                page-break-after: always !important;
-                break-before: page !important;
-                break-after: page !important;
-                background-repeat: no-repeat !important;
-                background-size: cover !important;
-                background-position: center center !important;
-            }
-            .slide:first-child {
-                page-break-before: auto !important;
-                break-before: auto !important;
-            }
-            /* Unique gradient backgrounds for each slide in print */
-            .slide:nth-child(1) { background: linear-gradient(135deg, #ff6a00 0%, #ee0979 100%) !important; }
-            .slide:nth-child(2) { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important; }
-            .slide:nth-child(3) { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%) !important; }
-            .slide:nth-child(4) { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%) !important; }
-            .slide:nth-child(5) { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%) !important; }
-            .slide:nth-child(6) { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%) !important; }
-            .slide:nth-child(7) { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%) !important; }
-            .slide:nth-child(8) { background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%) !important; }
-            .slide:nth-child(9) { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%) !important; }
-            .slide:nth-child(10) { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%) !important; }
-            .slide:nth-child(11) { background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%) !important; }
         }
     </style>
 </head>
