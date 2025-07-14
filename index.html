@@ -1239,17 +1239,34 @@
             slide.addEventListener('scroll', handleScroll);
         });
 
-        // PRINT/DOWNLOAD BUTTON (jsPDF + html2canvas, one slide per page, full fit)
+        // PRINT/DOWNLOAD BUTTON (robust: all slides visible, A4 landscape, images loaded, white background)
         document.getElementById('printBtn').addEventListener('click', async function() {
-            // Hide navigation and print button for PDF
             document.querySelector('.navigation').style.display = 'none';
             this.style.display = 'none';
 
             const slides = document.querySelectorAll('.slide');
-            // Show all slides for printing
-            slides.forEach(slide => slide.style.display = 'flex');
+            // Save original display and position
+            const originalStyles = [];
+            slides.forEach(slide => {
+                originalStyles.push({
+                    display: slide.style.display,
+                    position: slide.style.position
+                });
+                slide.style.display = 'block';
+                slide.style.position = 'static';
+                slide.style.background = '#fff';
+                slide.style.width = '1123px'; // A4 landscape at 96dpi
+                slide.style.height = '794px';
+            });
 
-            // Create a new jsPDF instance
+            // Wait for all images to load
+            await Promise.all(Array.from(document.images).map(img => {
+                if (img.complete) return Promise.resolve();
+                return new Promise(resolve => {
+                    img.onload = img.onerror = resolve;
+                });
+            }));
+
             const pdf = new window.jspdf.jsPDF({
                 orientation: 'landscape',
                 unit: 'pt',
@@ -1258,43 +1275,36 @@
 
             for (let i = 0; i < slides.length; i++) {
                 const slide = slides[i];
-                // Use html2canvas to render the slide as an image
                 const canvas = await html2canvas(slide, {
                     scale: 2,
                     useCORS: true,
                     backgroundColor: '#fff',
-                    windowWidth: slide.scrollWidth,
-                    windowHeight: slide.scrollHeight
+                    width: 1123,
+                    height: 794
                 });
                 const imgData = canvas.toDataURL('image/jpeg', 1.0);
 
-                // Get A4 page size in points
                 const pageWidth = pdf.internal.pageSize.getWidth();
                 const pageHeight = pdf.internal.pageSize.getHeight();
 
-                // Calculate image dimensions to cover the page exactly
-                const imgWidth = canvas.width;
-                const imgHeight = canvas.height;
-                const ratio = Math.min(pageWidth / imgWidth, pageHeight / imgHeight);
-
-                const finalWidth = imgWidth * ratio;
-                const finalHeight = imgHeight * ratio;
-                const x = (pageWidth - finalWidth) / 2;
-                const y = (pageHeight - finalHeight) / 2;
-
                 if (i > 0) pdf.addPage();
-                pdf.addImage(imgData, 'JPEG', x, y, finalWidth, finalHeight);
+                pdf.addImage(imgData, 'JPEG', 0, 0, pageWidth, pageHeight);
             }
 
             pdf.save('Millennials-vs-GenZ-Presentation.pdf');
 
-            // Restore navigation and print button after download
-            document.querySelector('.navigation').style.display = '';
-            document.getElementById('printBtn').style.display = '';
-            // Restore only the active slide
+            // Restore original styles
             slides.forEach((slide, i) => {
+                slide.style.display = originalStyles[i].display;
+                slide.style.position = originalStyles[i].position;
+                slide.style.width = '';
+                slide.style.height = '';
+                slide.style.background = '';
                 if (!slide.classList.contains('active')) slide.style.display = 'none';
             });
+
+            document.querySelector('.navigation').style.display = '';
+            document.getElementById('printBtn').style.display = '';
         });
     </script>
 </body>
