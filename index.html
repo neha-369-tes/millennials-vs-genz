@@ -1239,7 +1239,7 @@
             slide.addEventListener('scroll', handleScroll);
         });
 
-        // PRINT/DOWNLOAD BUTTON (force slide to viewport, capture node, restore styles)
+        // PRINT/DOWNLOAD BUTTON (force slide to viewport, wait 5s for content, capture node, restore styles)
         document.getElementById('printBtn').addEventListener('click', async function() {
             const slides = document.querySelectorAll('.slide');
             const pdf = new window.jspdf.jsPDF({
@@ -1286,8 +1286,8 @@
 
                 document.body.style.overflow = 'hidden';
 
-                // Wait for layout
-                await new Promise(r => setTimeout(r, 100));
+                // Wait for layout and content to load (5 seconds)
+                await new Promise(r => setTimeout(r, 5000));
 
                 // Wait for images to load
                 await Promise.all(Array.from(slides[i].querySelectorAll('img')).map(img => {
