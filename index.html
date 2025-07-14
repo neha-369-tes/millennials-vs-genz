@@ -6,6 +6,7 @@
     <title>Millennials vs Gen Z - Interactive Presentation</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
         
@@ -493,6 +494,49 @@
             0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
             100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
         }
+        @media print {
+            body {
+                background: white !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            .progress-bar, .navigation, #printBtn, .common-title {
+                display: none !important;
+            }
+            .slide {
+                min-height: 100vh !important;
+                height: 100vh !important;
+                page-break-after: always;
+                box-shadow: none !important;
+                background: white !important;
+                color: #222 !important;
+                overflow: visible !important;
+                padding-top: 2rem !important;
+            }
+            .slide:last-child {
+                page-break-after: auto;
+            }
+            .floating-shapes, .shape {
+                display: none !important;
+            }
+            .generation-card, .conclusion-card {
+                box-shadow: none !important;
+                background: #fff !important;
+                border: 1px solid #eee !important;
+            }
+            .lifestyle-image, .meme-image, .meme-image video {
+                max-width: 100% !important;
+                max-height: 350px !important;
+                object-fit: contain !important;
+                border-radius: 10px !important;
+                box-shadow: none !important;
+            }
+            .slide-counter {
+                display: none !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -644,10 +688,7 @@
                 <h2 class="gen-title">Gen Z 📱</h2>
                 <div class="meme-container">
                     <h3 class="meme-title">Born with Wi-Fi</h3>
-                    <video controls width="100%" autoplay muted loop>
-                        <source src="assets/techgenzz.mp4" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
+                    <img src="assets/techgenz.gif" alt="Multiple devices and screens" class="meme-image">
                 </div>
                 <ul class="traits-list">
                     <li>Intuitively understands any app - "Just tap here, duh" 🤯</li>
@@ -873,7 +914,7 @@
         <div class="slide-counter">8 / 10</div>
         <h1 class="title">Fashion & Lifestyle 👗</h1>
         <p class="presenter">Style Evolution Through Generations (Who's More Stylish?) 💅</p>
-        <p class="speaker">Speaker: Rinofin Jose</p>
+        <p class="speaker">Speaker: Grethu</p>
         
         <div class="content-wrapper">
             <div class="generation-card">
@@ -920,7 +961,7 @@
             <div class="shape"></div>
             <div class="shape"></div>
         </div>
-        <div class="slide-counter">9 / 11</div>
+        <div class="slide-counter">9 / 10</div>
         <h1 class="title">Values and Priorities 🌱🌟</h1>
         <p class="presenter">A generational lens through Tamil Nadu's evolving culture 🏛️</p>
         <p class="speaker">Speaker: Avik</p>
@@ -960,7 +1001,7 @@
         </div>
     </div>
 
-    <!-- Slide 10: Dating & Relationships -->
+    <!-- Slide 10: Conclusion -->
     <div class="slide">
         <div class="floating-shapes">
             <div class="shape"></div>
@@ -968,57 +1009,7 @@
             <div class="shape"></div>
             <div class="shape"></div>
         </div>
-        <div class="slide-counter">10 / 11</div>
-        <h1 class="title">Dating & Relationships 💕</h1>
-        <p class="presenter">Love in the Digital Age (Who's More Confused?) 😵‍💫</p>
-        <p class="speaker">Speaker: Grethu</p>
-        
-        <div class="content-wrapper">
-            <div class="generation-card">
-                <h2 class="gen-title">Millennials 💔</h2>
-                <div class="meme-container">
-                    <h3 class="meme-title">"It's complicated"</h3>
-                    <img src="assets/love genz3.jpg" alt="Millennial dating" class="meme-image">
-                </div>
-                <ul class="traits-list">
-                    <li>Swipes on apps while on Hotstar - "Tinder + Family Man reruns = multitasking" 📱</li>
-                    <li>"It's complicated" status - Facebook relationship drama since 2011 💔</li>
-                    <li>Instagram-perfect dates - "Wait, take a pic before eating the dosa" 📸</li>
-                    <li>Mastered the art of ghosting - "Didn't reply since Pongal, still feels fine" 👻</li>
-                    <li>Marriage fear but wants it - "Shaadi okay, but not yet... maybe... later?" 💍</li>
-                    <li>"Text me when you reach home, okay?" 📱</li>
-                </ul>
-                <img src="assets/love genz.jpg" alt="Millennial relationships" class="lifestyle-image">
-            </div>
-            
-            <div class="generation-card">
-                <h2 class="gen-title">Gen Z 💕</h2>
-                <div class="meme-container">
-                    <h3 class="meme-title">Emotional intelligence</h3>
-                    <img src="assets/love mill.jpg" alt="Gen Z dating" class="meme-image">
-                </div>
-                <ul class="traits-list">
-                    <li>Finds love in Instagram Reels comments - "Their reply was cuter than the video" 💕</li>
-                    <li>Emotional intelligence required - "You journal? That's attractive" 🧠</li>
-                    <li>Casual hangout dates - "Cafe, walk, memes - perfect plan" 😊</li>
-                    <li>No toxic behaviors allowed - "If it's giving red flag, I'm out" 🚩</li>
-                    <li>Happiness over marriage - "Single and thriving, pa" ✨</li>
-                    <li>"Snap me when you're alive." 📸</li>
-                </ul>
-                <img src="assets/love genz2.jpg" alt="Gen Z relationships" class="lifestyle-image">
-            </div>
-        </div>
-    </div>
-
-    <!-- Slide 11: Conclusion -->
-    <div class="slide">
-        <div class="floating-shapes">
-            <div class="shape"></div>
-            <div class="shape"></div>
-            <div class="shape"></div>
-            <div class="shape"></div>
-        </div>
-        <div class="slide-counter">11 / 11</div>
+        <div class="slide-counter">10 / 10</div>
         <h1 class="title">The Verdict 🏆</h1>
         <p class="presenter">What We Actually Have in Common (Peace Treaty) 🤝</p>
         <p class="speaker">Speaker: Neha</p>
@@ -1060,6 +1051,21 @@
         <button class="nav-btn" id="prevBtn">← Previous</button>
         <button class="nav-btn" id="nextBtn">Next →</button>
     </div>
+
+    <button id="printBtn" style="
+        position: fixed;
+        top: 1rem;
+        left: 1rem;
+        z-index: 2000;
+        background: #fff;
+        color: #2d3748;
+        border: none;
+        border-radius: 30px;
+        padding: 0.7rem 1.5rem;
+        font-weight: 600;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+        cursor: pointer;
+    ">Download Printable</button>
 
     <script>
         let currentSlide = 0;
@@ -1227,6 +1233,38 @@
         // Add scroll event listeners to all slides
         slides.forEach(slide => {
             slide.addEventListener('scroll', handleScroll);
+        });
+
+        // PRINT/DOWNLOAD BUTTON
+        document.getElementById('printBtn').addEventListener('click', function() {
+            // Hide navigation and print button for PDF
+            document.querySelector('.navigation').style.display = 'none';
+            this.style.display = 'none';
+
+            // Show all slides for printing
+            const slides = document.querySelectorAll('.slide');
+            slides.forEach(slide => slide.style.display = 'flex');
+
+            // Set up PDF options
+            const opt = {
+                margin:       0,
+                filename:     'Millennials-vs-GenZ-Presentation.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#fff' },
+                jsPDF:        { unit: 'px', format: 'a4', orientation: 'landscape' },
+                pagebreak:    { mode: ['css', 'legacy'] }
+            };
+
+            // Generate PDF from the slides container
+            html2pdf().from(document.body).set(opt).save().then(() => {
+                // Restore navigation and print button after download
+                document.querySelector('.navigation').style.display = '';
+                document.getElementById('printBtn').style.display = '';
+                // Restore only the active slide
+                slides.forEach((slide, i) => {
+                    if (!slide.classList.contains('active')) slide.style.display = 'none';
+                });
+            });
         });
     </script>
 </body>
