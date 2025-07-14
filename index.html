@@ -429,16 +429,19 @@
         }
         
         /* Gradient backgrounds for each slide */
-        .slide:nth-child(1) { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-        .slide:nth-child(2) { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
-        .slide:nth-child(3) { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
-        .slide:nth-child(4) { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
-        .slide:nth-child(5) { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
-        .slide:nth-child(6) { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); }
-        .slide:nth-child(7) { background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); }
-        .slide:nth-child(8) { background: linear-gradient(135deg, #ff8a80 0%, #ea80fc 100%); }
-        .slide:nth-child(9) { background: linear-gradient(135deg, #8fd3f4 0%, #84fab0 100%); }
-        .slide:nth-child(10) { background: linear-gradient(135deg, #d299c2 0%, #fef9d7 100%); }
+        .slide:nth-child(1),
+        .slide:nth-child(2),
+        .slide:nth-child(3),
+        .slide:nth-child(4),
+        .slide:nth-child(5),
+        .slide:nth-child(6),
+        .slide:nth-child(7),
+        .slide:nth-child(8),
+        .slide:nth-child(9),
+        .slide:nth-child(10),
+        .slide:nth-child(11) {
+            background: linear-gradient(135deg, #232526 0%, #f9d423 100%) !important;
+        }
         
         /* Additional gradient backgrounds for new slides */
         .slide:nth-child(8) { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); }
@@ -513,7 +516,7 @@
             .progress-bar, .navigation, #printBtn, .common-title {
                 display: none !important;
             }
-            .slide {
+            .slide, #cover-slide {
                 display: flex !important;
                 flex-direction: column !important;
                 align-items: center !important;
@@ -529,7 +532,7 @@
                 min-width: unset !important;
                 box-sizing: border-box;
                 box-shadow: none !important;
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+                background: linear-gradient(135deg, #232526 0%, #f9d423 100%) !important;
                 color: #fff !important;
                 overflow: visible !important;
                 padding: 0 !important;
@@ -636,7 +639,7 @@
     </div>
     
     <!-- Front Cover Slide -->
-    <div class="slide" id="cover-slide" style="background: linear-gradient(135deg, #ff6a00 0%, #ee0979 100%); display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; height: 100vh;">
+    <div class="slide" id="cover-slide" style="background: linear-gradient(135deg, #232526 0%, #f9d423 100%); display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; height: 100vh;">
         <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; flex: 1; width: 100%; height: 100%; min-height: 0; min-width: 0;">
             <h1 style="font-size: 4rem; font-weight: 800; color: white; text-shadow: 2px 2px 12px rgba(0,0,0,0.25); margin-bottom: 1.5rem; letter-spacing: 2px;">Millennials vs Gen Z</h1>
             <h2 style="font-size: 2rem; color: #fff; font-weight: 600; margin-bottom: 2.5rem; text-shadow: 1px 1px 8px rgba(0,0,0,0.15);">The Ultimate Generational Showdown</h2>
