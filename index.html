@@ -521,7 +521,6 @@
                 text-align: center !important;
                 page-break-after: always;
                 width: 100% !important;
-                height: 100vh !important;
                 min-height: unset !important;
                 min-width: unset !important;
                 box-sizing: border-box;
@@ -534,6 +533,7 @@
                 padding-top: 2rem !important;
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
+                page-break-inside: avoid !important;
             }
             .slide:last-child {
                 page-break-after: auto;
@@ -541,17 +541,30 @@
             .floating-shapes, .shape {
                 display: none !important;
             }
+            .content-wrapper {
+                display: flex !important;
+                flex-direction: row !important;
+                align-items: flex-start !important;
+                justify-content: center !important;
+                width: 100% !important;
+                gap: 2rem !important;
+                text-align: left !important;
+                page-break-inside: avoid !important;
+            }
             .generation-card, .conclusion-card {
+                width: 48% !important;
+                max-width: 600px !important;
+                min-width: 320px !important;
                 box-shadow: none !important;
                 background: rgba(255,255,255,0.85) !important;
                 border: 1px solid #eee !important;
-                margin-left: auto !important;
-                margin-right: auto !important;
-                text-align: center !important;
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+                text-align: left !important;
                 display: flex !important;
                 flex-direction: column !important;
                 align-items: center !important;
-                justify-content: center !important;
+                justify-content: flex-start !important;
             }
             .lifestyle-image, .meme-image, .meme-image video {
                 max-width: 100% !important;
@@ -565,18 +578,6 @@
             }
             .slide-counter {
                 display: none !important;
-            }
-            .content-wrapper {
-                display: flex !important;
-                flex-direction: column !important;
-                align-items: center !important;
-                justify-content: center !important;
-                width: 100% !important;
-                text-align: center !important;
-            }
-            .generation-card, .conclusion-card {
-                width: 100% !important;
-                max-width: 900px !important;
             }
             .presenter, .speaker, .gen-title, .meme-title, ul.traits-list, h1.title {
                 text-align: center !important;
