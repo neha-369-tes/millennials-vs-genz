@@ -514,7 +514,11 @@
                 display: none !important;
             }
             .slide {
-                display: block !important;
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                justify-content: flex-start !important;
+                text-align: center !important;
                 page-break-after: always;
                 width: 100% !important;
                 height: 100vh !important;
@@ -528,11 +532,6 @@
                 color: #222 !important;
                 overflow: visible !important;
                 padding-top: 2rem !important;
-                display: flex !important;
-                flex-direction: column !important;
-                align-items: center !important;
-                justify-content: flex-start !important;
-                text-align: center !important;
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
             }
@@ -549,6 +548,10 @@
                 margin-left: auto !important;
                 margin-right: auto !important;
                 text-align: center !important;
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                justify-content: center !important;
             }
             .lifestyle-image, .meme-image, .meme-image video {
                 max-width: 100% !important;
@@ -567,6 +570,8 @@
                 justify-content: center !important;
                 align-items: flex-start !important;
                 text-align: center !important;
+                display: flex !important;
+                flex-direction: row !important;
             }
             .presenter, .speaker, .gen-title, .meme-title, ul.traits-list, h1.title {
                 text-align: center !important;
@@ -1068,9 +1073,9 @@
             <div class="shape"></div>
         </div>
         <div class="slide-counter">10 / 10</div>
-        <h1 class="title">The Verdict 🏆</h1>
-        <p class="presenter">What We Actually Have in Common (Peace Treaty) 🤝</p>
-        <p class="speaker">Speaker: Rinofin Jose</p>
+        <h1 class="title">Conclusion 🏆</h1>
+        <p class="presenter">Verdict</p>
+        <p class="speaker">Rinofin Jose</p>
         
         <div class="content-wrapper">
             <div class="generation-card conclusion-card" style="max-width: 800px; margin: 0 auto;">
