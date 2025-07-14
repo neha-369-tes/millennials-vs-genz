@@ -1239,7 +1239,7 @@
             slide.addEventListener('scroll', handleScroll);
         });
 
-        // PRINT/DOWNLOAD BUTTON (render real slide in place, one at a time, for full fidelity)
+        // PRINT/DOWNLOAD BUTTON (scale each slide to fit A4, preserve backgrounds and all content)
         document.getElementById('printBtn').addEventListener('click', async function() {
             const slides = document.querySelectorAll('.slide');
             const pdf = new window.jspdf.jsPDF({
@@ -1262,7 +1262,6 @@
                 if (slide.classList.contains('active')) activeIndex = i;
             });
 
-            // Hide all slides except the one being rendered
             for (let i = 0; i < slides.length; i++) {
                 slides.forEach((slide, j) => {
                     slide.style.display = (i === j) ? 'flex' : 'none';
@@ -1280,11 +1279,26 @@
                     });
                 }));
 
+                // --- SCALE CONTENT TO FIT ---
+                // Remove any previous scaling
+                slides[i].style.transform = '';
+                slides[i].style.transformOrigin = '';
+
+                // Get bounding box
+                const rect = slides[i].getBoundingClientRect();
+                const scale = Math.min(pageWidthPx / rect.width, pageHeightPx / rect.height, 1);
+
+                slides[i].style.transformOrigin = 'top left';
+                slides[i].style.transform = `scale(${scale})`;
+
+                // Wait a tick for layout
+                await new Promise(r => setTimeout(r, 50));
+
                 // Render to canvas
                 const canvas = await html2canvas(slides[i], {
                     scale: 2,
                     useCORS: true,
-                    backgroundColor: null, // Use computed background
+                    backgroundColor: null,
                     width: pageWidthPx,
                     height: pageHeightPx
                 });
@@ -1295,6 +1309,10 @@
 
                 if (i > 0) pdf.addPage();
                 pdf.addImage(imgData, 'JPEG', 0, 0, pageWidth, pageHeight);
+
+                // Remove scaling for next slide
+                slides[i].style.transform = '';
+                slides[i].style.transformOrigin = '';
             }
 
             pdf.save('Millennials-vs-GenZ-Presentation.pdf');
@@ -1302,6 +1320,8 @@
             // Restore all slides and navigation
             slides.forEach((slide, i) => {
                 slide.style.display = (i === activeIndex) ? 'flex' : 'none';
+                slide.style.transform = '';
+                slide.style.transformOrigin = '';
             });
             document.querySelector('.navigation').style.display = '';
             document.getElementById('printBtn').style.display = '';
