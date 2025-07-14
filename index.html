@@ -507,7 +507,7 @@
                 padding: 0 !important;
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
-                background: linear-gradient(135deg, #ff6a00 0%, #ee0979 100%) !important;
+                background: none !important;
                 box-sizing: border-box;
             }
             .progress-bar, .navigation, #printBtn, .common-title {
@@ -519,10 +519,10 @@
                 align-items: center !important;
                 justify-content: flex-start !important;
                 text-align: center !important;
+                page-break-before: always !important;
                 page-break-after: always !important;
-                page-break-inside: avoid !important;
+                break-before: page !important;
                 break-after: page !important;
-                break-inside: avoid !important;
                 width: 100% !important;
                 min-height: 100vh !important;
                 height: auto !important;
@@ -537,10 +537,10 @@
                 padding-top: 2rem !important;
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
+                /* page-break-inside: avoid !important; -- removed to allow breaking */
             }
             .slide:last-child {
-                page-break-after: auto !important;
-                break-after: auto !important;
+                page-break-after: auto;
             }
             .floating-shapes, .shape {
                 display: none !important;
@@ -553,6 +553,7 @@
                 width: 100% !important;
                 gap: 2rem !important;
                 text-align: left !important;
+                /* page-break-inside: avoid !important; -- removed to allow breaking */
             }
             .generation-card, .conclusion-card {
                 width: 48% !important;
@@ -645,26 +646,46 @@
         @page coverLandscape {
             size: A4 landscape;
         }
-        .slide {
-            page-break-after: always !important;
-            page-break-inside: avoid !important;
-            break-after: page !important;
-            break-inside: avoid !important;
-            width: 100vw !important;
-            height: 100vh !important;
-            min-height: unset !important;
-            max-height: 100vh !important;
-            overflow: hidden !important;
-            box-sizing: border-box !important;
-            position: relative !important;
-            background-clip: border-box !important;
-            background-size: cover !important;
-            background-repeat: no-repeat !important;
-            background-position: center center !important;
-        }
-        .slide:last-child {
-            page-break-after: auto !important;
-            break-after: auto !important;
+        @media print {
+            html, body {
+                background: none !important;
+            }
+            .slide {
+                width: 100vw !important;
+                height: 100vh !important;
+                min-height: unset !important;
+                min-width: unset !important;
+                box-sizing: border-box !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                justify-content: flex-start !important;
+                page-break-before: always !important;
+                page-break-after: always !important;
+                break-before: page !important;
+                break-after: page !important;
+                background-repeat: no-repeat !important;
+                background-size: cover !important;
+                background-position: center center !important;
+            }
+            .slide:first-child {
+                page-break-before: auto !important;
+                break-before: auto !important;
+            }
+            /* Unique gradient backgrounds for each slide in print */
+            .slide:nth-child(1) { background: linear-gradient(135deg, #ff6a00 0%, #ee0979 100%) !important; }
+            .slide:nth-child(2) { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important; }
+            .slide:nth-child(3) { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%) !important; }
+            .slide:nth-child(4) { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%) !important; }
+            .slide:nth-child(5) { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%) !important; }
+            .slide:nth-child(6) { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%) !important; }
+            .slide:nth-child(7) { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%) !important; }
+            .slide:nth-child(8) { background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%) !important; }
+            .slide:nth-child(9) { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%) !important; }
+            .slide:nth-child(10) { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%) !important; }
+            .slide:nth-child(11) { background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%) !important; }
         }
     </style>
 </head>
