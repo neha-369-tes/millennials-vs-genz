@@ -1239,11 +1239,8 @@
             slide.addEventListener('scroll', handleScroll);
         });
 
-        // PRINT/DOWNLOAD BUTTON (wrapper div for exact A4 fit, no zoom/crop)
+        // PRINT/DOWNLOAD BUTTON (render real slide in place, one at a time, for full fidelity)
         document.getElementById('printBtn').addEventListener('click', async function() {
-            document.querySelector('.navigation').style.display = 'none';
-            this.style.display = 'none';
-
             const slides = document.querySelectorAll('.slide');
             const pdf = new window.jspdf.jsPDF({
                 orientation: 'landscape',
@@ -1255,66 +1252,39 @@
             const pageWidthPx = 1123;
             const pageHeightPx = 794;
 
-            // Create a hidden container for rendering
-            let renderContainer = document.getElementById('renderContainer');
-            if (!renderContainer) {
-                renderContainer = document.createElement('div');
-                renderContainer.id = 'renderContainer';
-                document.body.appendChild(renderContainer);
-            }
-            renderContainer.style.position = 'fixed';
-            renderContainer.style.left = '-9999px';
-            renderContainer.style.top = '0';
-            renderContainer.style.width = pageWidthPx + 'px';
-            renderContainer.style.height = pageHeightPx + 'px';
-            renderContainer.style.background = '#fff';
-            renderContainer.style.zIndex = '-1';
+            // Hide navigation and print button
+            document.querySelector('.navigation').style.display = 'none';
+            this.style.display = 'none';
 
+            // Save which slide is active
+            let activeIndex = 0;
+            slides.forEach((slide, i) => {
+                if (slide.classList.contains('active')) activeIndex = i;
+            });
+
+            // Hide all slides except the one being rendered
             for (let i = 0; i < slides.length; i++) {
-                // Clone the slide
-                const clone = slides[i].cloneNode(true);
+                slides.forEach((slide, j) => {
+                    slide.style.display = (i === j) ? 'flex' : 'none';
+                });
 
-                // Remove unwanted elements
-                Array.from(clone.querySelectorAll('.slide-counter, .navigation, #printBtn, .progress-bar, .common-title, .floating-shapes')).forEach(el => el.remove());
-
-                // Force layout for print
-                clone.style.display = 'block';
-                clone.style.position = 'relative';
-                clone.style.background = '#fff';
-                clone.style.width = '100%';
-                clone.style.height = '100%';
-                clone.style.margin = '0';
-                clone.style.padding = '0';
-                clone.style.overflow = 'auto';
-
-                // Create a wrapper for exact sizing
-                const wrapper = document.createElement('div');
-                wrapper.style.width = pageWidthPx + 'px';
-                wrapper.style.height = pageHeightPx + 'px';
-                wrapper.style.background = '#fff';
-                wrapper.style.overflow = 'hidden';
-                wrapper.appendChild(clone);
-
-                // Clear and append to render container
-                renderContainer.innerHTML = '';
-                renderContainer.appendChild(wrapper);
+                // Scroll into view and wait for layout
+                slides[i].scrollIntoView();
+                await new Promise(r => setTimeout(r, 100));
 
                 // Wait for images to load
-                await Promise.all(Array.from(clone.querySelectorAll('img')).map(img => {
+                await Promise.all(Array.from(slides[i].querySelectorAll('img')).map(img => {
                     if (img.complete) return Promise.resolve();
                     return new Promise(resolve => {
                         img.onload = img.onerror = resolve;
                     });
                 }));
 
-                // Wait a tick for layout
-                await new Promise(r => setTimeout(r, 50));
-
                 // Render to canvas
-                const canvas = await html2canvas(wrapper, {
+                const canvas = await html2canvas(slides[i], {
                     scale: 2,
                     useCORS: true,
-                    backgroundColor: '#fff',
+                    backgroundColor: null, // Use computed background
                     width: pageWidthPx,
                     height: pageHeightPx
                 });
@@ -1329,14 +1299,12 @@
 
             pdf.save('Millennials-vs-GenZ-Presentation.pdf');
 
-            // Clean up
-            renderContainer.innerHTML = '';
+            // Restore all slides and navigation
+            slides.forEach((slide, i) => {
+                slide.style.display = (i === activeIndex) ? 'flex' : 'none';
+            });
             document.querySelector('.navigation').style.display = '';
             document.getElementById('printBtn').style.display = '';
-            // Restore only the active slide
-            slides.forEach((slide, i) => {
-                if (!slide.classList.contains('active')) slide.style.display = 'none';
-            });
         });
     </script>
 </body>
