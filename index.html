@@ -1239,113 +1239,25 @@
             slide.addEventListener('scroll', handleScroll);
         });
 
-        // PRINT/DOWNLOAD BUTTON (force slide to viewport, wait 5s for content, capture node, restore styles)
-        document.getElementById('printBtn').addEventListener('click', async function() {
-            const slides = document.querySelectorAll('.slide');
-            const pdf = new window.jspdf.jsPDF({
-                orientation: 'landscape',
-                unit: 'pt',
-                format: 'a4'
+        // PRINT/DOWNLOAD BUTTON (use browser's native print for perfect results)
+        document.getElementById('printBtn').addEventListener('click', function() {
+            // Show all slides for printing
+            document.querySelectorAll('.slide').forEach(slide => {
+                slide.style.display = 'block';
             });
-
             // Hide navigation and print button
             document.querySelector('.navigation').style.display = 'none';
             this.style.display = 'none';
 
-            // Save which slide is active
-            let activeIndex = 0;
-            slides.forEach((slide, i) => {
-                if (slide.classList.contains('active')) activeIndex = i;
-            });
-
-            // Get the viewport size (what the user sees)
-            const viewportWidth = window.innerWidth;
-            const viewportHeight = window.innerHeight;
-
-            for (let i = 0; i < slides.length; i++) {
-                // Hide all slides except the one being rendered
-                slides.forEach((slide, j) => {
-                    slide.style.display = (i === j) ? 'block' : 'none';
+            setTimeout(() => {
+                window.print();
+                // Restore after print
+                document.querySelectorAll('.slide').forEach((slide, i) => {
+                    slide.style.display = slide.classList.contains('active') ? 'flex' : 'none';
                 });
-
-                // Save original styles
-                const originalStyle = slides[i].getAttribute('style') || '';
-                const originalBodyOverflow = document.body.style.overflow;
-
-                // Make the slide fill the viewport and be on top
-                slides[i].style.position = 'fixed';
-                slides[i].style.left = '0';
-                slides[i].style.top = '0';
-                slides[i].style.width = '100vw';
-                slides[i].style.height = '100vh';
-                slides[i].style.zIndex = '9999';
-                slides[i].style.margin = '0';
-                slides[i].style.padding = '0';
-                slides[i].style.backgroundClip = 'padding-box';
-                slides[i].style.overflow = 'visible';
-
-                document.body.style.overflow = 'hidden';
-
-                // Wait for layout and content to load (5 seconds)
-                await new Promise(r => setTimeout(r, 5000));
-
-                // Wait for images to load
-                await Promise.all(Array.from(slides[i].querySelectorAll('img')).map(img => {
-                    if (img.complete) return Promise.resolve();
-                    return new Promise(resolve => {
-                        img.onload = img.onerror = resolve;
-                    });
-                }));
-
-                // Take a screenshot of the slide node itself
-                const canvas = await html2canvas(slides[i], {
-                    scale: 2,
-                    useCORS: true,
-                    backgroundColor: null,
-                    width: viewportWidth,
-                    height: viewportHeight,
-                    windowWidth: viewportWidth,
-                    windowHeight: viewportHeight,
-                    scrollX: window.scrollX,
-                    scrollY: window.scrollY
-                });
-                const imgData = canvas.toDataURL('image/jpeg', 1.0);
-
-                // Fit the screenshot to the PDF page
-                const pageWidth = pdf.internal.pageSize.getWidth();
-                const pageHeight = pdf.internal.pageSize.getHeight();
-                const imgAspect = canvas.width / canvas.height;
-                const pageAspect = pageWidth / pageHeight;
-
-                let renderWidth, renderHeight, x, y;
-                if (imgAspect > pageAspect) {
-                    renderWidth = pageWidth;
-                    renderHeight = pageWidth / imgAspect;
-                    x = 0;
-                    y = (pageHeight - renderHeight) / 2;
-                } else {
-                    renderHeight = pageHeight;
-                    renderWidth = pageHeight * imgAspect;
-                    x = (pageWidth - renderWidth) / 2;
-                    y = 0;
-                }
-
-                if (i > 0) pdf.addPage();
-                pdf.addImage(imgData, 'JPEG', x, y, renderWidth, renderHeight);
-
-                // Restore styles
-                slides[i].setAttribute('style', originalStyle);
-                document.body.style.overflow = originalBodyOverflow;
-            }
-
-            pdf.save('Millennials-vs-GenZ-Presentation.pdf');
-
-            // Restore all slides and navigation
-            slides.forEach((slide, i) => {
-                slide.style.display = (i === activeIndex) ? 'flex' : 'none';
-            });
-            document.querySelector('.navigation').style.display = '';
-            document.getElementById('printBtn').style.display = '';
+                document.querySelector('.navigation').style.display = '';
+                document.getElementById('printBtn').style.display = '';
+            }, 500);
         });
     </script>
 </body>
